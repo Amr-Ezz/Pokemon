@@ -5,8 +5,18 @@ import usePokemons from "../Hooks/usePokemon";
 export const PokemonContext = createContext();
 ///////////////////////////////////////////////////////////////
 export const PokemonProvider = ({ children }) => {
-  const { isloading, handleNext, handlePrev, allPokemons, pokemonDes, offset } =
-    usePokemons();
+  const {
+    isloading,
+    handleNext,
+    handlePrev,
+    allPokemons,
+    pokemonDes,
+    offset,
+    selectedPokemon,
+    getSinglePokemonId,
+    handleSearchValue,
+    searchValue,
+  } = usePokemons();
 
   const value = {
     isloading,
@@ -15,6 +25,10 @@ export const PokemonProvider = ({ children }) => {
     allPokemons,
     pokemonDes,
     offset,
+    selectedPokemon,
+    getSinglePokemonId,
+    handleSearchValue,
+    searchValue,
   };
 
   return (

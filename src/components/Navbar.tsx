@@ -6,6 +6,8 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
+import { usePokemonsContext } from "../context/PokemonProvider";
+import { useNavigate } from "react-router-dom";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -50,10 +52,24 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function Navbar() {
+  const { handleSearchValue, searchValue } = usePokemonsContext();
+  const navigate = useNavigate();
+  const handleChange = (e) => {
+    handleSearchValue(e.target.value);
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    handleClick();
+  };
+  const handleClick = () => {
+    if (searchValue) {
+      navigate(`/pokemon/${searchValue}`);
+    }
+  };
   return (
     <AppBar
       sx={{
-        backgroundColor: "red",
+        backgroundColor: "#D32F2F",
         display: "flex",
         position: "relative",
       }}
@@ -79,13 +95,16 @@ export default function Navbar() {
         </Box>
 
         <Search>
-          <SearchIconWrapper>
-            <SearchIcon />
-          </SearchIconWrapper>
-          <StyledInputBase
-            placeholder="Search…"
-            inputProps={{ "aria-label": "search" }}
-          />
+          <form onSubmit={handleSubmit}>
+            <SearchIconWrapper>
+              <SearchIcon />
+            </SearchIconWrapper>
+            <StyledInputBase
+              placeholder="Search…"
+              inputProps={{ "aria-label": "search" }}
+              onChange={handleChange}
+            />
+          </form>
         </Search>
       </Toolbar>
     </AppBar>

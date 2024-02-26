@@ -17,6 +17,13 @@ const typesColors = {
 };
 export const firstLetterCapital = (name) =>
   name.charAt(0).toUpperCase() + name.slice(1);
+export const formatStatName = (name) => {
+  if (name.toLowerCase() === "hp") return "HP";
+  return name
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+};
 
 export const separeteTypes = (types) => {
   return types.map(({ type }) => ({

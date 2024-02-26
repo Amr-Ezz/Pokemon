@@ -8,7 +8,7 @@ export default function ContainedButtons({ onNext, onPrev, isPrevDisabled }) {
       <Button
         variant="contained"
         onClick={onNext}
-        sx={{ backgroundColor: "red" }}
+        sx={{ backgroundColor: "#D32F2F" }}
       >
         Next
       </Button>

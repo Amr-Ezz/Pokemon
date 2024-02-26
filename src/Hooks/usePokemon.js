@@ -1,14 +1,17 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   fetchPokemons,
   fetchPokemonData,
   fetchPokemonDescription,
+  fetchSinglePokemonId,
 } from "../api/pokemonApi";
 // import { usePokemonsContext } from "../context/PokemonProvider";
 
 export default function usePokemons() {
   // const { setAllPokemons, setPokemonDes } = usePokemonsContext();
   const [allPokemons, setAllPokemons] = useState([]);
+  const [selectedPokemon, setSelectedPokemon] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
   const [pokemonDes, setPokemonDes] = useState([]);
   const [isloading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -26,12 +29,12 @@ export default function usePokemons() {
           return fetchPokemonData(pokemon.url);
         });
         const details = await Promise.all(detailsPromises);
-
         console.log(details, "details");
         setAllPokemons(details);
         const descriptionPokemon = details.map((detail) => {
           return fetchPokemonDescription(detail.species.url);
         });
+
         const descriptionPokemonPromises = await Promise.all(
           descriptionPokemon
         );
@@ -45,6 +48,32 @@ export default function usePokemons() {
         setIsLoading(false);
       });
   }, [offset]);
+  const getSinglePokemonId = useCallback(async (pokemonId) => {
+    setIsLoading(true);
+    try {
+      const detail = await fetchSinglePokemonId(pokemonId);
+      setSelectedPokemon(detail);
+    } catch (error) {
+      console.log(error);
+      setError(error.toString());
+    } finally {
+      setIsLoading(false);
+    }
+  });
+  const handleSearchValue = (query) => {
+    setSearchValue(query);
+  };
 
-  return { isloading, handleNext, handlePrev, allPokemons, pokemonDes, offset };
+  return {
+    isloading,
+    handleNext,
+    handlePrev,
+    allPokemons,
+    pokemonDes,
+    offset,
+    selectedPokemon,
+    getSinglePokemonId,
+    handleSearchValue,
+    searchValue,
+  };
 }

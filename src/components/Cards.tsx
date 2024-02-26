@@ -1,23 +1,23 @@
 import * as React from "react";
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { firstLetterCapital, separeteTypes } from "../Utils/pokemonUtils";
 import { useNavigate } from "react-router-dom";
 import { usePokemonsContext } from "../context/PokemonProvider";
 import { Box, Paper } from "@mui/material";
-// import { fetchPokemonApi, fetchSinglePokemonApi } from "../api/pokemonApi";
-// import { PokemonContext } from "../api/PokemonProvider";
+import { PokemonDetails } from "../types/types";
 
-export default function Cards({ pokemon }) {
+interface PokemonCardProps {
+  pokemon: PokemonDetails;
+}
+export default function Cards({ pokemon }: PokemonCardProps) {
   const typesWithColors = separeteTypes(pokemon.types || []);
   const { getSinglePokemonId } = usePokemonsContext();
   const navigate = useNavigate();
 
-  const handlePokemonSelect = (pokemonId) => {
+  const handlePokemonSelect = (pokemonId: number) => {
     getSinglePokemonId(pokemonId).then(() => {
       navigate(`/pokemon/${pokemonId}`);
     });

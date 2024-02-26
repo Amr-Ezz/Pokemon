@@ -39,7 +39,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   width: "100%",
   "& .MuiInputBase-input": {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create("width"),
     [theme.breakpoints.up("sm")]: {
@@ -77,18 +76,10 @@ export default function Navbar() {
       <Toolbar sx={{ justifyContent: "space-between" }}>
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <img
-            src="./pokemon-logo-text-png-7.png"
+            src="/pokemon-logo-text-png-7.png"
             style={{ width: 80, height: 50 }}
           />
-          {/* <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 4 }}
-          >
-          
-          </IconButton> */}
+
           <Typography variant="h6" component="div" sx={{ marginLeft: "8px" }}>
             Pokemon Gallery
           </Typography>

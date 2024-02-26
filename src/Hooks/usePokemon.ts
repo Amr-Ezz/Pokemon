@@ -5,14 +5,22 @@ import {
   fetchPokemonDescription,
   fetchSinglePokemonId,
 } from "../api/pokemonApi";
+import {
+  PokemonBasic,
+  PokemonDetails,
+  PokemonDescription,
+} from "../types/types";
+
 // import { usePokemonsContext } from "../context/PokemonProvider";
 
 export default function usePokemons() {
   // const { setAllPokemons, setPokemonDes } = usePokemonsContext();
-  const [allPokemons, setAllPokemons] = useState([]);
-  const [selectedPokemon, setSelectedPokemon] = useState([]);
+  const [allPokemons, setAllPokemons] = useState<PokemonDetails[]>([]);
+  const [selectedPokemon, setSelectedPokemon] = useState<PokemonDetails | null>(
+    null
+  );
   const [searchValue, setSearchValue] = useState("");
-  const [pokemonDes, setPokemonDes] = useState([]);
+  const [pokemonDes, setPokemonDes] = useState<PokemonDescription[]>([]);
   const [isloading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [offset, setOffset] = useState(0);
@@ -48,19 +56,22 @@ export default function usePokemons() {
         setIsLoading(false);
       });
   }, [offset]);
-  const getSinglePokemonId = useCallback(async (pokemonId) => {
-    setIsLoading(true);
-    try {
-      const detail = await fetchSinglePokemonId(pokemonId);
-      setSelectedPokemon(detail);
-    } catch (error) {
-      console.log(error);
-      setError(error.toString());
-    } finally {
-      setIsLoading(false);
-    }
-  });
-  const handleSearchValue = (query) => {
+  const getSinglePokemonId = useCallback(
+    async (pokemonId: number) => {
+      setIsLoading(true);
+      try {
+        const detail = await fetchSinglePokemonId(pokemonId);
+        setSelectedPokemon(detail);
+      } catch (error) {
+        console.log(error);
+        setError(error.toString());
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [fetchSinglePokemonId]
+  );
+  const handleSearchValue = (query: string) => {
     setSearchValue(query);
   };
 
@@ -75,5 +86,6 @@ export default function usePokemons() {
     getSinglePokemonId,
     handleSearchValue,
     searchValue,
+    error,
   };
 }

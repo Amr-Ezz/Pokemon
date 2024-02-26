@@ -18,24 +18,27 @@ import {
   separeteTypes,
 } from "../Utils/pokemonUtils";
 import BackButton from "../shared/BackButton";
+import { PokemonDetails as PokemonDetailsType } from "../types/types";
 
-const PokemonDetails = () => {
-  const { pokemonId } = useParams();
+const PokemonDetails: React.FC = () => {
+  const { pokemonId } = useParams<{ pokemonId: string }>();
 
   const { selectedPokemon, getSinglePokemonId } = usePokemonsContext();
-  useEffect(() => {
-    getSinglePokemonId(pokemonId);
-  }, [pokemonId]);
-  const typesWithColors = separeteTypes(selectedPokemon.types || []);
 
-  const [selectedTab, setSelectedTab] = useState("stats");
-  const handleTabChange = (event, newTab) => {
-    if (newTab !== null) {
-      setSelectedTab(newTab);
-    }
+  const typesWithColors = selectedPokemon
+    ? separeteTypes(selectedPokemon.types || [])
+    : [];
+
+  const [selectedTab, setSelectedTab] = useState<string>("stats");
+  const handleTabChange = (
+    event: React.MouseEvent<HTMLElement>,
+    newTab: string
+  ) => {
+    setSelectedTab(newTab);
   };
-  console.log(selectedPokemon, "selectedPokemon");
-  if (!selectedPokemon) return <div>loading...</div>;
+  useEffect(() => {
+    if (pokemonId) getSinglePokemonId(Number(pokemonId));
+  }, [pokemonId, getSinglePokemonId]);
 
   return (
     <>
@@ -50,8 +53,6 @@ const PokemonDetails = () => {
         <Box
           sx={{
             width: "100%",
-            display: "flex",
-            alignSelf: "flex-start",
             maxWidth: 600,
           }}
         >

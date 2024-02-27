@@ -62,7 +62,8 @@ export default function usePokemons() {
   const handleSearchValue = async (query: string) => {
     setIsLoading(true);
     try {
-      setSearchValue(query);
+      const queryLowerCase = query.toLowerCase();
+      setSearchValue(queryLowerCase);
     } catch (error) {
       console.error("Error fetching Pokémon by name:", error);
       setError(error);

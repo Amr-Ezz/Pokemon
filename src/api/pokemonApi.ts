@@ -24,9 +24,11 @@
 const BASE_URL = "https://pokeapi.co/api/v2";
 
 export const fetchPokemons = (limit, offset) => {
-  return fetch(`${BASE_URL}/pokemon?limit=${limit}&offset=${offset}`).then(
-    (res) => res.json()
-  );
+  return fetch(`${BASE_URL}/pokemon?limit=${limit}&offset=${offset}`)
+    .then((res) => res.json())
+    .catch((error) => {
+      alert(`Sorry, Website is currently down `);
+    });
 };
 
 export const fetchPokemonData = (pokemonId) => {
@@ -36,6 +38,6 @@ export const fetchPokemonData = (pokemonId) => {
 export const fetchPokemonDescription = (pokemonId) => {
   return fetch(`${pokemonId}`).then((res) => res.json());
 };
-export const fetchSinglePokemonId = (pokemonId) => {
+export const fetchSinglePokemonId = (pokemonId: string | number) => {
   return fetch(`${BASE_URL}/pokemon/${pokemonId}`).then((res) => res.json());
 };

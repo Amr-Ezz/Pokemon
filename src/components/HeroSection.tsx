@@ -5,12 +5,17 @@ import Cards from "./Cards";
 import { usePokemonsContext } from "../context/PokemonProvider";
 import ContainedButtons from "../shared/Button";
 import CircularWithValueLabel from "../shared/Loader";
-import { Paper } from "@mui/material";
 
 export default function HeroSection() {
-  const { isloading, handleNext, handlePrev, allPokemons, pokemonDes, offset } =
-    usePokemonsContext();
-  console.log(allPokemons, "allPokemons");
+  const {
+    isloading,
+    handleNext,
+    handlePrev,
+    allPokemons,
+    pokemonDes,
+    offset,
+    error,
+  } = usePokemonsContext();
 
   const pokemonsWithDescription = allPokemons.map((pokemon) => {
     const descriptionObj = pokemonDes.find((desc) => desc.id === pokemon.id);
@@ -30,6 +35,11 @@ export default function HeroSection() {
       description: flavorText,
     };
   });
+
+  if (error) {
+    return <span>Error</span>;
+  }
+
   return (
     <>
       <Box

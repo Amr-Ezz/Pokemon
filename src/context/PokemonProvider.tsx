@@ -10,9 +10,10 @@ interface PokemonContextType {
   pokemonDes: PokemonDescription[];
   offset: number;
   selectedPokemon: PokemonDetails | null;
-  getSinglePokemonId: (pokemonId: number) => Promise<void>;
+  getSinglePokemonId: (pokemonId: string | number) => Promise<void>;
   handleSearchValue: (value: string) => void;
   searchValue: string;
+  error: null;
 }
 
 const initialContext: PokemonContextType = {
@@ -26,6 +27,7 @@ const initialContext: PokemonContextType = {
   getSinglePokemonId: async () => {},
   handleSearchValue: () => {},
   searchValue: "",
+  error: null,
 };
 
 export const PokemonContext = createContext<PokemonContextType>(initialContext);
@@ -48,6 +50,7 @@ export const PokemonProvider: React.FC<PokemonProviderProps> = ({
     getSinglePokemonId,
     handleSearchValue,
     searchValue,
+    error,
   } = usePokemons();
 
   const value = {
@@ -61,6 +64,7 @@ export const PokemonProvider: React.FC<PokemonProviderProps> = ({
     getSinglePokemonId,
     handleSearchValue,
     searchValue,
+    error,
   };
 
   return (

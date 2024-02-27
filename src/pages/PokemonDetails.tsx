@@ -23,11 +23,15 @@ import { PokemonDetails as PokemonDetailsType } from "../types/types";
 const PokemonDetails: React.FC = () => {
   const { pokemonId } = useParams<{ pokemonId: string }>();
 
-  const { selectedPokemon, getSinglePokemonId } = usePokemonsContext();
+  const { selectedPokemon, getSinglePokemonId, error } = usePokemonsContext();
 
   const typesWithColors = selectedPokemon
     ? separeteTypes(selectedPokemon.types || [])
     : [];
+
+  if (error) {
+    return <span>Error</span>;
+  }
 
   const [selectedTab, setSelectedTab] = useState<string>("stats");
   const handleTabChange = (
@@ -37,7 +41,7 @@ const PokemonDetails: React.FC = () => {
     setSelectedTab(newTab);
   };
   useEffect(() => {
-    if (pokemonId) getSinglePokemonId(Number(pokemonId));
+    if (pokemonId) getSinglePokemonId(pokemonId);
   }, [pokemonId, getSinglePokemonId]);
 
   return (
@@ -92,7 +96,7 @@ const PokemonDetails: React.FC = () => {
                         borderRadius: "20%",
                       }}
                     >
-                      {type.name}
+                      {firstLetterCapital(type.name)}
                     </Typography>
                   ))}
                 </Box>
@@ -121,7 +125,7 @@ const PokemonDetails: React.FC = () => {
                     },
                   }}
                 >
-                  {firstLetterCapital(tab)}
+                  {tab}
                 </ToggleButton>
               ))}
             </ToggleButtonGroup>

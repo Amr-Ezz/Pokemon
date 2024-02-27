@@ -15,8 +15,9 @@ const typesColors = {
   fighting: "#cfbb93",
   ice: "#68afff",
 };
-export const firstLetterCapital = (name) =>
+export const firstLetterCapital = (name: string) =>
   name.charAt(0).toUpperCase() + name.slice(1);
+
 export const formatStatName = (name) => {
   if (name.toLowerCase() === "hp") return "HP";
   return name

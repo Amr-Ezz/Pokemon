@@ -5,16 +5,9 @@ import {
   fetchPokemonDescription,
   fetchSinglePokemonId,
 } from "../api/pokemonApi";
-import {
-  PokemonBasic,
-  PokemonDetails,
-  PokemonDescription,
-} from "../types/types";
-
-// import { usePokemonsContext } from "../context/PokemonProvider";
+import { PokemonDetails, PokemonDescription } from "../types/types";
 
 export default function usePokemons() {
-  // const { setAllPokemons, setPokemonDes } = usePokemonsContext();
   const [allPokemons, setAllPokemons] = useState<PokemonDetails[]>([]);
   const [selectedPokemon, setSelectedPokemon] = useState<PokemonDetails | null>(
     null
@@ -32,12 +25,10 @@ export default function usePokemons() {
     fetchPokemons(limit, offset)
       .then(async (response) => {
         const { results } = response;
-        console.log(results);
         const detailsPromises = results.map((pokemon) => {
           return fetchPokemonData(pokemon.url);
         });
         const details = await Promise.all(detailsPromises);
-        console.log(details, "details");
         setAllPokemons(details);
         const descriptionPokemon = details.map((detail) => {
           return fetchPokemonDescription(detail.species.url);
@@ -46,33 +37,38 @@ export default function usePokemons() {
         const descriptionPokemonPromises = await Promise.all(
           descriptionPokemon
         );
-        console.log(descriptionPokemonPromises, "description");
         setPokemonDes(descriptionPokemonPromises);
 
         setIsLoading(false);
       })
       .catch((error) => {
         setError(error.toString());
+
         setIsLoading(false);
       });
   }, [offset]);
-  const getSinglePokemonId = useCallback(
-    async (pokemonId: number) => {
-      setIsLoading(true);
-      try {
-        const detail = await fetchSinglePokemonId(pokemonId);
-        setSelectedPokemon(detail);
-      } catch (error) {
-        console.log(error);
-        setError(error.toString());
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [fetchSinglePokemonId]
-  );
-  const handleSearchValue = (query: string) => {
-    setSearchValue(query);
+  const getSinglePokemonId = useCallback(async (pokemonId: string | number) => {
+    setIsLoading(true);
+    try {
+      const detail = await fetchSinglePokemonId(pokemonId);
+      setSelectedPokemon(detail);
+    } catch (error) {
+      setError(error.toString());
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const handleSearchValue = async (query: string) => {
+    setIsLoading(true);
+    try {
+      setSearchValue(query);
+    } catch (error) {
+      console.error("Error fetching Pokémon by name:", error);
+      setError(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return {

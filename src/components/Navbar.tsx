@@ -7,7 +7,8 @@ import Typography from "@mui/material/Typography";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import { usePokemonsContext } from "../context/PokemonProvider";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { fetchSinglePokemonId } from "../api/pokemonApi";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -21,6 +22,9 @@ const Search = styled("div")(({ theme }) => ({
   [theme.breakpoints.up("sm")]: {
     marginLeft: theme.spacing(1),
     width: "auto",
+  },
+  [theme.breakpoints.down("sm")]: {
+    width: "50%",
   },
 }));
 
@@ -50,21 +54,28 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function Navbar() {
-  const { handleSearchValue, searchValue } = usePokemonsContext();
+export default function Navbar({}) {
+  const { handleSearchValue, searchValue, error } = usePokemonsContext();
   const navigate = useNavigate();
+
   const handleChange = (e) => {
     handleSearchValue(e.target.value);
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    handleClick();
-  };
-  const handleClick = () => {
-    if (searchValue) {
-      navigate(`/pokemon/${searchValue}`);
+
+    if (searchValue == "") {
+      alert("Please enter Pokemon's name");
+      return;
+    } else {
+      handleClick();
     }
   };
+  const handleClick = () => {
+    fetchSinglePokemonId(searchValue);
+    navigate(`/pokemon/${searchValue}`);
+  };
+
   return (
     <AppBar
       sx={{
@@ -75,12 +86,18 @@ export default function Navbar() {
     >
       <Toolbar sx={{ justifyContent: "space-between" }}>
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <img
-            src="/pokemon-logo-text-png-7.png"
-            style={{ width: 80, height: 50 }}
-          />
+          <Link to={"/"}>
+            <img
+              src="/pokemon-logo-text-png-7.png"
+              style={{ width: 80, height: 50 }}
+            />
+          </Link>
 
-          <Typography variant="h6" component="div" sx={{ marginLeft: "8px" }}>
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{ display: { xs: "none", sm: "block" }, paddingLeft: 4 }}
+          >
             Pokemon Gallery
           </Typography>
         </Box>

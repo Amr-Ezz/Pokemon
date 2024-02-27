@@ -25,7 +25,7 @@ export default function Cards({ pokemon }: PokemonCardProps) {
 
   return (
     <Card
-      sx={{ maxWidth: 250, cursor: "pointer" }}
+      sx={{ maxWidth: 250, cursor: "pointer", minWidth: 200 }}
       onClick={() => handlePokemonSelect(pokemon.id)}
     >
       <Paper elevation={0} sx={{ p: 2, backgroundColor: "#f5f5f5" }}>

@@ -53,7 +53,7 @@ export default function usePokemons() {
       const detail = await fetchSinglePokemonId(pokemonId);
       setSelectedPokemon(detail);
     } catch (error) {
-      setError(error.toString());
+      setError(error);
     } finally {
       setIsLoading(false);
     }

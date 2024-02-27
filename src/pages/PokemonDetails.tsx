@@ -19,19 +19,17 @@ import {
 } from "../Utils/pokemonUtils";
 import BackButton from "../shared/BackButton";
 import { PokemonDetails as PokemonDetailsType } from "../types/types";
+import CircularWithValueLabel from "../shared/Loader";
 
 const PokemonDetails: React.FC = () => {
   const { pokemonId } = useParams<{ pokemonId: string }>();
 
-  const { selectedPokemon, getSinglePokemonId, error } = usePokemonsContext();
+  const { selectedPokemon, getSinglePokemonId, isloading } =
+    usePokemonsContext();
 
   const typesWithColors = selectedPokemon
     ? separeteTypes(selectedPokemon.types || [])
     : [];
-
-  if (error) {
-    return <span>Error</span>;
-  }
 
   const [selectedTab, setSelectedTab] = useState<string>("stats");
   const handleTabChange = (
@@ -41,8 +39,13 @@ const PokemonDetails: React.FC = () => {
     setSelectedTab(newTab);
   };
   useEffect(() => {
-    if (pokemonId) getSinglePokemonId(pokemonId);
+    if (pokemonId) {
+      getSinglePokemonId(parseInt(pokemonId));
+    }
   }, [pokemonId, getSinglePokemonId]);
+  if (isloading) {
+    return <CircularWithValueLabel />;
+  }
 
   return (
     <>
@@ -51,35 +54,54 @@ const PokemonDetails: React.FC = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          p: 6,
+          p: { xs: 2, sm: 4, md: 6 },
         }}
       >
         <Box
           sx={{
             width: "100%",
-            maxWidth: 600,
+            maxWidth: { xs: "100%", sm: 600 },
           }}
         >
           <BackButton />
         </Box>
-        <Card sx={{ width: "100%", maxWidth: 600, mt: 2 }}>
+        <Card sx={{ width: "100%", maxWidth: { xs: "100%", sm: 600 }, mt: 2 }}>
           <CardContent>
-            <Box sx={{ display: "flex", flexDirection: "row" }}>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: { xs: "column", sm: "row" },
+                alignItems: "center",
+              }}
+            >
               <CardMedia
                 component="img"
-                sx={{ width: 151 }}
+                sx={{ width: { xs: "50%", sm: 151 }, height: "auto" }}
                 image={selectedPokemon?.sprites.front_default}
                 alt={selectedPokemon?.name}
               />
-              <Box sx={{ display: "flex", flexDirection: "column", ml: 2 }}>
-                <Typography gutterBottom variant="h3" component="div">
-                  {selectedPokemon?.name}
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  ml: { sm: 2 },
+                  mt: { xs: 2, sm: 0 },
+                }}
+              >
+                <Typography
+                  gutterBottom
+                  variant="h5"
+                  component="div"
+                  sx={{ textAlign: { xs: "center", sm: "left" } }}
+                >
+                  {firstLetterCapital(selectedPokemon?.name || "")}
                 </Typography>
                 <Box
                   sx={{
                     display: "flex",
                     flexDirection: "row",
                     flexWrap: "wrap",
+                    justifyContent: { xs: "center", sm: "start" },
                   }}
                 >
                   {typesWithColors.map((type, index) => (
@@ -87,12 +109,10 @@ const PokemonDetails: React.FC = () => {
                       key={index}
                       variant="body2"
                       color="text.secondary"
-                      style={{
+                      sx={{
                         backgroundColor: type.color,
                         margin: "4px",
                         padding: "5px",
-                        flexDirection: "row",
-                        width: "fit-content",
                         borderRadius: "20%",
                       }}
                     >
@@ -107,7 +127,16 @@ const PokemonDetails: React.FC = () => {
               value={selectedTab}
               exclusive
               onChange={handleTabChange}
-              sx={{ mt: 2, ".MuiToggleButton-root": { border: 0 } }}
+              sx={{
+                mt: 2,
+                display: "flex",
+                flexDirection: { xs: "column", sm: "row" },
+                width: "100%",
+                ".MuiToggleButton-root": {
+                  border: 0,
+                  flexGrow: 1,
+                },
+              }}
             >
               {["stats", "moves", "abilities"].map((tab) => (
                 <ToggleButton
@@ -141,11 +170,10 @@ const PokemonDetails: React.FC = () => {
                     >
                       <Typography sx={{ fontWeight: 600 }}>
                         {formatStatName(stat.stat.name)}
-                      </Typography>{" "}
+                      </Typography>
                     </Grid>
-
                     <Grid item xs={6}>
-                      <Typography>{stat.base_stat}</Typography>{" "}
+                      <Typography>{stat.base_stat}</Typography>
                     </Grid>
                   </React.Fragment>
                 ))}
@@ -158,11 +186,11 @@ const PokemonDetails: React.FC = () => {
                     <Grid item xs={6}>
                       <Typography sx={{ fontWeight: 600 }}>
                         {formatStatName(move.move.name)}
-                      </Typography>{" "}
+                      </Typography>
                     </Grid>
                     <Grid item xs={6}>
                       <Typography variant="body2" color="text.secondary">
-                        Level: {move.version_group_details[0].level_learned_at}{" "}
+                        Level: {move.version_group_details[0].level_learned_at}
                       </Typography>
                     </Grid>
                   </React.Fragment>
@@ -176,7 +204,7 @@ const PokemonDetails: React.FC = () => {
                     <Grid item xs={6}>
                       <Typography sx={{ fontWeight: 600 }}>
                         {formatStatName(ability.ability.name)}
-                      </Typography>{" "}
+                      </Typography>
                     </Grid>
                     <Grid item xs={6}>
                       <Typography variant="body2" color="text.secondary">

@@ -10,19 +10,22 @@ import CircularWithValueLabel, {
   CircularProgressWithLabel,
 } from "./shared/Loader";
 import NotFoundPage from "./pages/NotFoundPage";
+import ErrorBoundary from "./components/ErrorBoundary";
 function App() {
   return (
     <PokemonProvider>
       <Router>
-        <Navbar />
-        <React.Suspense fallback={<CircularWithValueLabel />}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="*" element={<NotFoundPage />} />
+        <ErrorBoundary>
+          <Navbar />
+          <React.Suspense fallback={<CircularWithValueLabel />}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="*" element={<NotFoundPage />} />
 
-            <Route path="/pokemon/:pokemonId" element={<PokemonDetails />} />
-          </Routes>
-        </React.Suspense>
+              <Route path="/pokemon/:pokemonId" element={<PokemonDetails />} />
+            </Routes>
+          </React.Suspense>
+        </ErrorBoundary>
       </Router>
     </PokemonProvider>
   );

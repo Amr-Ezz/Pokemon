@@ -40,7 +40,7 @@ const PokemonDetails: React.FC = () => {
   };
   useEffect(() => {
     if (pokemonId) {
-      getSinglePokemonId(parseInt(pokemonId));
+      getSinglePokemonId(pokemonId);
     }
   }, [pokemonId, getSinglePokemonId]);
   if (isloading) {
